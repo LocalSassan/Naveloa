@@ -546,6 +546,16 @@
       border-color: #166534;
     }
 
+
+    .auth-message {
+      display: none; margin-top: 14px; padding: 13px 14px; border-radius: 12px;
+      border: 1px solid var(--line); background: var(--surface-2); color: var(--text);
+    }
+    .auth-message.error { display:block; border-color:#fca5a5; background:#fef2f2; color:#991b1b; }
+    .auth-message.success { display:block; border-color:#86efac; background:#f0fdf4; color:#166534; }
+    body.dark .auth-message.error { background:#451a1a;color:#fecaca;border-color:#7f1d1d; }
+    body.dark .auth-message.success { background:#123524;color:#bbf7d0;border-color:#166534; }
+
     /* INFO CARDS */
     .info-grid {
       display: grid;
@@ -940,7 +950,7 @@
                       data-normal="Konto erstellen" data-easy="Konto machen">Konto erstellen</button>
             </form>
 
-            <div id="statusBox" class="status" aria-live="polite"></div>
+            <div id="statusBox" class="auth-message" aria-live="polite"></div>
           </div>
         </div>
       </div>
@@ -1096,6 +1106,8 @@
     </footer>
   </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="naveloa-auth.js"></script>
 <script>
   const menuButton = document.getElementById("menuButton");
   const menu = document.getElementById("mainMenu");
@@ -1364,30 +1376,103 @@
       selectedRole === "Bewerbende mit Unterstützung" ? "block" : "none";
   });
 
-  function openDashboard() {
-    if (selectedRole === "Arbeitgeber") {
-      window.location.href = "arbeitgeber.html";
-    } else if (selectedRole === "Begleitperson") {
-      window.location.href = "begleitperson.html";
-    } else {
-      window.location.href = "bewerber.html";
-    }
+  const ROLE_TO_DB = {
+    "Arbeitgeber": "employer",
+    "Bewerbende": "applicant",
+    "Bewerbende mit Unterstützung": "supported_applicant",
+    "Begleitperson": "companion"
+  };
+
+  function showAuthMessage(message, type = "error") {
+    statusBox.className = "auth-message " + type;
+    statusBox.textContent = message;
   }
 
-  loginForm.addEventListener("submit", event => {
+  function setAuthBusy(isBusy) {
+    loginForm.querySelectorAll("button, input").forEach(el => el.disabled = isBusy);
+    registerForm.querySelectorAll("button, input").forEach(el => el.disabled = isBusy);
+  }
+
+  loginForm.addEventListener("submit", async event => {
     event.preventDefault();
-    openDashboard();
+    statusBox.className = "auth-message";
+    const inputs = loginForm.querySelectorAll("input");
+    const email = inputs[0].value.trim();
+    const password = inputs[1].value;
+    setAuthBusy(true);
+
+    try {
+      const { data, error } = await naveloaSupabase.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+      showAuthMessage(easyMode ? "Anmeldung erfolgreich." : "Anmeldung erfolgreich. Du wirst weitergeleitet …", "success");
+      await naveloaRedirectForRole(data.user.id);
+    } catch (error) {
+      console.error(error);
+      showAuthMessage(easyMode
+        ? "Anmelden hat nicht funktioniert. Prüfe E-Mail und Passwort."
+        : "Anmeldung fehlgeschlagen. Bitte prüfe E-Mail-Adresse und Passwort.");
+    } finally {
+      setAuthBusy(false);
+    }
   });
 
-  registerForm.addEventListener("submit", event => {
+  registerForm.addEventListener("submit", async event => {
     event.preventDefault();
-    if (selectedRole === "Bewerbende mit Unterstützung") {
-      localStorage.setItem("naveloaAccountMode", "supported");
-    } else if (selectedRole === "Bewerbende") {
-      localStorage.setItem("naveloaAccountMode", "independent");
+    statusBox.className = "auth-message";
+    const inputs = registerForm.querySelectorAll("input");
+    const firstName = inputs[0].value.trim();
+    const lastName = inputs[1].value.trim();
+    const email = inputs[2].value.trim();
+    const password = inputs[3].value;
+    const role = ROLE_TO_DB[selectedRole];
+
+    if (!role) {
+      showAuthMessage("Bitte wähle einen Kontotyp aus.");
+      return;
     }
-    openDashboard();
+    if (password.length < 8) {
+      showAuthMessage(easyMode ? "Das Passwort braucht mindestens 8 Zeichen." : "Bitte verwende ein Passwort mit mindestens 8 Zeichen.");
+      return;
+    }
+
+    setAuthBusy(true);
+    try {
+      const { data, error } = await naveloaSupabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            first_name: firstName,
+            last_name: lastName,
+            role
+          }
+        }
+      });
+      if (error) throw error;
+
+      if (data.session && data.user) {
+        showAuthMessage(easyMode ? "Konto erstellt." : "Konto erstellt. Du wirst weitergeleitet …", "success");
+        await naveloaRedirectForRole(data.user.id);
+      } else {
+        showAuthMessage(
+          easyMode
+            ? "Konto erstellt. Bitte bestätige zuerst deine E-Mail."
+            : "Konto erstellt. Bitte öffne die Bestätigungs-E-Mail von Naveloa/Supabase und bestätige deine E-Mail-Adresse. Danach kannst du dich anmelden.",
+          "success"
+        );
+      }
+    } catch (error) {
+      console.error(error);
+      showAuthMessage(easyMode
+        ? "Das Konto konnte nicht erstellt werden."
+        : "Registrierung fehlgeschlagen: " + (error.message || "Unbekannter Fehler"));
+    } finally {
+      setAuthBusy(false);
+    }
   });
+
+  // Falls bereits eine Session besteht, zeigen wir keinen Zwangs-Redirect auf der Startseite.
+  // So bleibt die öffentliche Startseite weiterhin erreichbar.
 
   applyTheme();
   updateLanguage();

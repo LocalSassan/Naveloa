@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Naveloa – Administration</title>
+<style>
+:root{--bg:#f4f7fb;--surface:#fff;--surface2:#f8fafc;--text:#182230;--muted:#667085;--line:#d9e1ea;--accent:#7c3aed;--shadow:0 12px 30px rgba(15,23,42,.08)}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}button{font:inherit}.page{max-width:1180px;margin:auto;padding:20px}.top{display:flex;justify-content:space-between;align-items:center;gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px;box-shadow:var(--shadow)}.brand{font-size:1.35rem;font-weight:900}.tag{color:var(--muted);font-size:.9rem}.actions{display:flex;gap:9px;flex-wrap:wrap}.btn{border:0;border-radius:11px;padding:10px 13px;font-weight:800;cursor:pointer}.primary{background:var(--accent);color:white}.secondary{background:var(--surface2);color:var(--text);border:1px solid var(--line)}.hero,.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:var(--shadow);margin-top:20px}.hero h1{margin:0 0 8px}.hero p{color:var(--muted)}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:17px}.stat{background:var(--surface2);border:1px solid var(--line);border-radius:14px;padding:15px}.stat strong{display:block;font-size:1.6rem}.stat span{color:var(--muted)}table{width:100%;border-collapse:collapse;margin-top:12px}th,td{text-align:left;padding:11px;border-bottom:1px solid var(--line);font-size:.93rem}th{color:var(--muted)}.badge{display:inline-block;border-radius:999px;padding:5px 8px;background:#ede9fe;color:#6d28d9;font-weight:800}.message{margin-top:12px;color:var(--muted)}@media(max-width:800px){.stats{grid-template-columns:1fr 1fr}.table-wrap{overflow:auto}}@media(max-width:500px){.stats{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="page">
+<header class="top"><div><div class="brand">Naveloa · Administration</div><div class="tag">Dieser Bereich ist nur für Admin-Konten sichtbar.</div></div><div class="actions"><a class="btn secondary" href="index.html" style="text-decoration:none">Startseite</a><button class="btn primary" onclick="naveloaSignOut()">Abmelden</button></div></header>
+<section class="hero"><h1>Admin-Dashboard</h1><p>Übersicht über Benutzer, Stellen, Bewerbungen und Begleitungsverknüpfungen.</p><div class="stats"><div class="stat"><strong id="userCount">–</strong><span>Benutzer</span></div><div class="stat"><strong id="jobCount">–</strong><span>Stellen</span></div><div class="stat"><strong id="applicationCount">–</strong><span>Bewerbungen</span></div><div class="stat"><strong id="connectionCount">–</strong><span>Begleitungsverbindungen</span></div></div></section>
+<section class="card"><h2>Benutzerkonten</h2><p class="message" id="adminMessage">Daten werden geladen …</p><div class="table-wrap"><table><thead><tr><th>Name</th><th>Rolle</th><th>Ort</th><th>Kanton</th><th>ID</th></tr></thead><tbody id="usersBody"></tbody></table></div></section>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="naveloa-auth.js"></script>
+<script>
+(async()=>{
+  const auth=await naveloaRequireRoles(['admin']);
+  if(!auth)return;
+  const msg=document.getElementById('adminMessage');
+  try{
+    const [profilesRes,jobsRes,appsRes,connectionsRes]=await Promise.all([
+      naveloaSupabase.from('profiles').select('id,first_name,last_name,role,city,canton',{count:'exact'}).order('created_at',{ascending:false}),
+      naveloaSupabase.from('jobs').select('id',{count:'exact',head:true}),
+      naveloaSupabase.from('applications').select('id',{count:'exact',head:true}),
+      naveloaSupabase.from('support_connections').select('id',{count:'exact',head:true})
+    ]);
+    if(profilesRes.error) throw profilesRes.error;
+    document.getElementById('userCount').textContent=profilesRes.count ?? profilesRes.data.length;
+    document.getElementById('jobCount').textContent=jobsRes.count ?? '–';
+    document.getElementById('applicationCount').textContent=appsRes.count ?? '–';
+    document.getElementById('connectionCount').textContent=connectionsRes.count ?? '–';
+    document.getElementById('usersBody').innerHTML=profilesRes.data.map(p=>`<tr><td>${escapeHtml(((p.first_name||'')+' '+(p.last_name||'')).trim()||'–')}</td><td><span class="badge">${escapeHtml(p.role)}</span></td><td>${escapeHtml(p.city||'–')}</td><td>${escapeHtml(p.canton||'–')}</td><td>${escapeHtml(p.id)}</td></tr>`).join('');
+    msg.textContent='Admin-Zugriff bestätigt.';
+  }catch(e){console.error(e);msg.textContent='Admin-Daten konnten noch nicht geladen werden. Führe zuerst das beiliegende admin_security.sql in Supabase aus.';}
+})();
+function escapeHtml(v){return String(v).replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));}
+</script>
+</body></html>
