@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Naveloa – Deine Stärken. Deine Chancen.</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --surface: #ffffff;
+      --surface-2: #f8fafc;
+      --text: #182230;
+      --muted: #5f6b7a;
+      --line: #d9e1ea;
+      --shadow: 0 14px 35px rgba(20, 34, 51, .08);
+      --accent: #2563eb;
+      --accent-dark: #1d4ed8;
+
+      --employer: #2563eb;
+      --employer-bg: #dbeafe;
+
+      --seeker: #0f766e;
+      --seeker-bg: #ccfbf1;
+
+      --supported: #7c3aed;
+      --supported-bg: #ede9fe;
+
+      --companion: #ea580c;
+      --companion-bg: #ffedd5;
+    }
+
+    body.dark {
+      --bg: #0b1220;
+      --surface: #111c2e;
+      --surface-2: #172338;
+      --text: #f8fafc;
+      --muted: #c5cfdb;
+      --line: #334155;
+      --shadow: 0 14px 35px rgba(0,0,0,.30);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(37,99,235,.07), transparent 28rem),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+      min-height: 100vh;
+    }
+
+    body.dark {
+      background:
+        radial-gradient(circle at top left, rgba(96,165,250,.10), transparent 28rem),
+        var(--bg);
+    }
+
+    button, input { font: inherit; }
+
+    button, a { -webkit-tap-highlight-color: transparent; }
+
+    button:focus-visible,
+    input:focus-visible,
+    a:focus-visible {
+      outline: 4px solid rgba(37,99,235,.28);
+      outline-offset: 3px;
+    }
+
+    .page {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px 20px 56px;
+    }
+
+    /* HEADER */
+    .site-header {
+      position: static;
+      z-index: 1;
+      background: color-mix(in srgb, var(--surface) 92%, transparent);
+      backdrop-filter: blur(14px);
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      padding: 14px 16px;
+      margin-bottom: 34px;
+    }
+
+    .header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .logo-mark {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, #2563eb, #7c3aed);
+      color: white;
+      box-shadow: 0 8px 20px rgba(37,99,235,.20);
+      font-weight: 900;
+      font-size: 1.3rem;
+      flex: 0 0 auto;
+    }
+
+    .brand {
+      font-weight: 900;
+      font-size: 1.35rem;
+      letter-spacing: -.02em;
+    }
+
+    .tagline {
+      color: var(--muted);
+      font-size: .88rem;
+      font-weight: 700;
+      margin-top: 1px;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .mini-toggle {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 10px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: var(--surface-2);
+      color: var(--text);
+      font-weight: 700;
+    }
+
+    .mini-toggle input {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--accent);
+    }
+
+    .menu-wrap {
+      position: relative;
+    }
+
+    .menu-button {
+      width: 48px;
+      height: 48px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--surface-2);
+      color: var(--text);
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+    }
+
+    .menu-button svg {
+      width: 25px;
+      height: 25px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+    }
+
+    .menu-panel {
+      position: absolute;
+      right: 0;
+      top: 58px;
+      width: min(330px, calc(100vw - 44px));
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 10px;
+      box-shadow: 0 18px 45px rgba(15,23,42,.18);
+      display: none;
+    }
+
+    .menu-panel.open { display: block; }
+
+    .menu-panel a {
+      text-decoration: none;
+      color: var(--text);
+      display: block;
+      border-radius: 12px;
+      padding: 12px 13px;
+      font-weight: 800;
+    }
+
+    .menu-panel a span {
+      display: block;
+      font-size: .83rem;
+      color: var(--muted);
+      font-weight: 500;
+      margin-top: 2px;
+    }
+
+    .menu-panel a:hover {
+      background: var(--surface-2);
+    }
+
+
+    .speech-controls {
+      display: none;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 10px;
+    }
+
+    .speech-controls.visible {
+      display: flex;
+    }
+
+    .speech-button {
+      min-height: 42px;
+      border-radius: 11px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--text);
+      padding: 9px 12px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+
+    .speech-button:hover {
+      background: var(--surface-2);
+    }
+
+    .readable-speaking {
+      outline: 4px solid rgba(37,99,235,.22);
+      outline-offset: 4px;
+      border-radius: 8px;
+    }
+
+    /* HERO */
+    .hero {
+      border: 1px solid var(--line);
+      background: linear-gradient(135deg, var(--surface), var(--surface-2));
+      border-radius: 28px;
+      padding: clamp(26px, 5vw, 52px);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 34px;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      right: -110px;
+      top: -100px;
+      background: linear-gradient(135deg, rgba(37,99,235,.15), rgba(124,58,237,.12));
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid #bfdbfe;
+      background: #eff6ff;
+      color: #1d4ed8;
+      border-radius: 999px;
+      padding: 7px 11px;
+      font-weight: 800;
+      font-size: .9rem;
+      margin-bottom: 18px;
+    }
+
+    body.dark .eyebrow {
+      background: #172554;
+      border-color: #1e40af;
+      color: #bfdbfe;
+    }
+
+    h1 {
+      max-width: 820px;
+      font-size: clamp(2.2rem, 6vw, 4.5rem);
+      line-height: 1.03;
+      letter-spacing: -.045em;
+      margin-bottom: 18px;
+    }
+
+    .hero p {
+      max-width: 760px;
+      color: var(--muted);
+      font-size: 1.1rem;
+    }
+
+    .hero-divider {
+      width: 86px;
+      height: 5px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #2563eb, #7c3aed);
+      margin: 25px 0;
+    }
+
+    /* SECTIONS */
+    .section {
+      margin-top: 42px;
+      scroll-margin-top: 120px;
+    }
+
+    .section-title {
+      font-size: clamp(1.6rem, 4vw, 2.35rem);
+      letter-spacing: -.025em;
+      margin-bottom: 8px;
+    }
+
+    .section-lead {
+      color: var(--muted);
+      max-width: 790px;
+      margin-bottom: 22px;
+    }
+
+    .section-shell {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    /* ROLE CARDS */
+    .role-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .role-card {
+      border: 2px solid transparent;
+      border-radius: 20px;
+      padding: 22px;
+      text-align: left;
+      cursor: pointer;
+      color: #162033;
+      position: relative;
+      min-height: 210px;
+      box-shadow: 0 9px 24px rgba(15,23,42,.07);
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+
+    .role-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 30px rgba(15,23,42,.12);
+    }
+
+    .role-card.active {
+      border-color: currentColor;
+      box-shadow: 0 0 0 4px rgba(37,99,235,.13), 0 15px 30px rgba(15,23,42,.12);
+    }
+
+    .employer { background: var(--employer-bg); color: #1748a8; }
+    .seeker { background: var(--seeker-bg); color: #0c635d; }
+    .supported { background: var(--supported-bg); color: #6b21a8; }
+    .companion { background: var(--companion-bg); color: #b54708; }
+
+    body.dark .employer { background: #172554; color: #dbeafe; }
+    body.dark .seeker { background: #134e4a; color: #ccfbf1; }
+    body.dark .supported { background: #4c1d95; color: #ede9fe; }
+    body.dark .companion { background: #7c2d12; color: #ffedd5; }
+
+    .role-head {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      margin-bottom: 14px;
+    }
+
+    .role-icon {
+      width: 58px;
+      height: 58px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      background: rgba(255,255,255,.62);
+      border: 1px solid rgba(255,255,255,.75);
+      flex: 0 0 auto;
+    }
+
+    body.dark .role-icon {
+      background: rgba(255,255,255,.10);
+      border-color: rgba(255,255,255,.12);
+    }
+
+    .role-icon svg {
+      width: 31px;
+      height: 31px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .role-card h3 {
+      font-size: 1.2rem;
+      color: inherit;
+    }
+
+    .role-card p {
+      color: color-mix(in srgb, currentColor 82%, #303b48);
+    }
+
+    body.dark .role-card p {
+      color: rgba(255,255,255,.86);
+    }
+
+    .role-note {
+      margin-top: 14px;
+      font-weight: 800;
+      font-size: .9rem;
+    }
+
+    /* LOGIN */
+    .login-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .selected-role {
+      border-radius: 20px;
+      padding: 24px;
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+    }
+
+    .selected-role strong {
+      display: block;
+      font-size: 1.35rem;
+      margin-top: 8px;
+    }
+
+    .selected-role p {
+      color: var(--muted);
+      margin-top: 9px;
+    }
+
+    .login-card {
+      border-radius: 20px;
+      padding: 24px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+    }
+
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .tab {
+      min-height: 46px;
+      padding: 10px 17px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: var(--surface-2);
+      color: var(--text);
+      cursor: pointer;
+      font-weight: 800;
+    }
+
+    .tab.active {
+      color: white;
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    form {
+      display: grid;
+      gap: 14px;
+    }
+
+    label {
+      font-weight: 800;
+      font-size: .95rem;
+    }
+
+    input {
+      width: 100%;
+      min-height: 48px;
+      margin-top: 6px;
+      border-radius: 12px;
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--text);
+      padding: 12px 13px;
+    }
+
+    .primary-button {
+      min-height: 49px;
+      border: none;
+      border-radius: 12px;
+      color: white;
+      background: var(--accent);
+      font-weight: 900;
+      cursor: pointer;
+      padding: 12px 16px;
+    }
+
+    .primary-button:hover { background: var(--accent-dark); }
+
+    .helper {
+      border-left: 4px solid #7c3aed;
+      background: color-mix(in srgb, #7c3aed 8%, var(--surface));
+      padding: 13px 14px;
+      border-radius: 10px;
+      color: var(--muted);
+    }
+
+    .status {
+      display: none;
+      margin-top: 14px;
+      border: 1px solid #86efac;
+      background: #f0fdf4;
+      color: #166534;
+      padding: 12px 14px;
+      border-radius: 12px;
+    }
+
+    body.dark .status {
+      background: #123524;
+      color: #bbf7d0;
+      border-color: #166534;
+    }
+
+    /* INFO CARDS */
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: 16px;
+    }
+
+    .info-card {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 20px;
+      background: var(--surface-2);
+    }
+
+    .info-card h3 {
+      margin-bottom: 8px;
+    }
+
+    .info-card p {
+      color: var(--muted);
+    }
+
+    /* ROLE EXPLANATIONS */
+    .role-details {
+      display: grid;
+      gap: 16px;
+    }
+
+    .role-detail {
+      border: 1px solid var(--line);
+      border-left: 8px solid var(--detail-color);
+      border-radius: 16px;
+      padding: 18px;
+      background: var(--surface-2);
+    }
+
+    .role-detail h3 {
+      margin-bottom: 7px;
+    }
+
+    .role-detail p {
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+
+    .role-detail ul {
+      padding-left: 20px;
+      display: grid;
+      gap: 6px;
+    }
+
+    /* CONTACT */
+    .contact-box {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .contact-item {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 18px;
+      background: var(--surface-2);
+    }
+
+    .contact-item p { color: var(--muted); }
+
+    footer {
+      color: var(--muted);
+      text-align: center;
+      padding: 44px 10px 8px;
+      font-size: .92rem;
+    }
+
+    @media (max-width: 900px) {
+      .login-layout,
+      .contact-box {
+        grid-template-columns: 1fr;
+      }
+
+      .info-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .role-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .mini-toggle .toggle-text {
+        display: none;
+      }
+
+      .brand {
+        font-size: 1.15rem;
+      }
+
+      .tagline {
+        font-size: .75rem;
+      }
+
+      .page {
+        padding-inline: 12px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        scroll-behavior: auto !important;
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page">
+
+    <header class="site-header">
+      <div class="header-row">
+        <div class="brand-wrap">
+          <div class="logo-mark" aria-hidden="true">N</div>
+          <div>
+            <div class="brand">Naveloa</div>
+            <div class="tagline">Deine Stärken. Deine Chancen.</div>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <label class="mini-toggle">
+            <input id="easyToggle" type="checkbox">
+            <span class="toggle-text">Einfache Sprache</span>
+          </label>
+
+          <label class="mini-toggle">
+            <input id="darkToggle" type="checkbox">
+            <span class="toggle-text">Dark Mode</span>
+          </label>
+
+          <label class="mini-toggle">
+            <input id="speechToggle" type="checkbox">
+            <span class="toggle-text" data-normal="Vorlesen" data-easy="Vorlesen">Vorlesen</span>
+          </label>
+
+          <div class="menu-wrap">
+            <button id="menuButton" class="menu-button" type="button"
+                    aria-label="Menü öffnen" aria-expanded="false" aria-controls="mainMenu">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M4 7h16"></path>
+                <path d="M4 12h16"></path>
+                <path d="M4 17h16"></path>
+              </svg>
+            </button>
+
+            <nav id="mainMenu" class="menu-panel" aria-label="Hauptmenü">
+              <a href="#was-ist-naveloa">
+                Was ist Naveloa?
+                <span>Die Idee hinter der Plattform</span>
+              </a>
+              <a href="#rollen">
+                Kontotypen & Rollen
+                <span>Was jedes Konto machen kann</span>
+              </a>
+              <a href="#ueber-uns">
+                Über uns
+                <span>Ziel und Werte von Naveloa</span>
+              </a>
+              <a href="#kontakt">
+                Kontakt
+                <span>Fragen und Rückmeldungen</span>
+              </a>
+            </nav>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="hero">
+      <div class="eyebrow"
+           data-normal="Eine Plattform für Arbeit, Stärken und Unterstützung"
+           data-easy="Eine Seite für Arbeit und Unterstützung">
+        Eine Plattform für Arbeit, Stärken und Unterstützung
+      </div>
+
+      <h1 data-normal="Deine Stärken. Deine Chancen."
+          data-easy="Finde Arbeit, die zu dir passt.">
+        Deine Stärken. Deine Chancen.
+      </h1>
+
+      <div class="hero-divider"></div>
+
+      <p data-normal="Naveloa bringt Arbeitgebende, Bewerbende und Begleitpersonen zusammen. Im Mittelpunkt stehen Fähigkeiten, Interessen und passende Unterstützung – nicht die Beeinträchtigung."
+         data-easy="Naveloa hilft Menschen bei der Arbeitssuche. Du kannst zeigen, was du gut kannst. Du kannst auch Unterstützung bekommen.">
+        Naveloa bringt Arbeitgebende, Bewerbende und Begleitpersonen zusammen. Im Mittelpunkt stehen Fähigkeiten, Interessen und passende Unterstützung – nicht die Beeinträchtigung.
+      </p>
+
+      <div id="speechControls" class="speech-controls" aria-label="Vorlesefunktion">
+        <button id="readPageButton" class="speech-button" type="button"
+                data-normal="Seite vorlesen" data-easy="Seite vorlesen">Seite vorlesen</button>
+        <button id="pauseSpeechButton" class="speech-button" type="button"
+                data-normal="Pause" data-easy="Pause">Pause</button>
+        <button id="resumeSpeechButton" class="speech-button" type="button"
+                data-normal="Weiter" data-easy="Weiter">Weiter</button>
+        <button id="stopSpeechButton" class="speech-button" type="button"
+                data-normal="Stop" data-easy="Stop">Stop</button>
+      </div>
+    </section>
+
+    <section id="login" class="section">
+      <h2 class="section-title" data-normal="Welches Konto passt zu dir?" data-easy="Welches Konto brauchst du?">
+        Welches Konto passt zu dir?
+      </h2>
+
+      <p class="section-lead"
+         data-normal="Wähle einen Kontotyp. Farben und klare Beschreibungen helfen bei der Orientierung."
+         data-easy="Wähle ein Konto. Jede Art hat eine eigene Farbe.">
+        Wähle einen Kontotyp. Farben und klare Beschreibungen helfen bei der Orientierung.
+      </p>
+
+      <div class="role-grid">
+        <button class="role-card employer active" type="button"
+                data-role="Arbeitgeber" data-accent="#2563eb" data-accent-dark="#1d4ed8">
+          <div class="role-head">
+            <div class="role-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M3 21h18"></path>
+                <path d="M5 21V7l7-4 7 4v14"></path>
+                <path d="M9 10h.01"></path>
+                <path d="M15 10h.01"></path>
+                <path d="M9 14h.01"></path>
+                <path d="M15 14h.01"></path>
+              </svg>
+            </div>
+            <h3 data-normal="Arbeitgeber" data-easy="Arbeitgeber">Arbeitgeber</h3>
+          </div>
+          <p data-normal="Stellen veröffentlichen, Bewerbungen erhalten und passende Bewerbende finden."
+             data-easy="Du kannst Stellen anbieten und Bewerbungen bekommen.">
+            Stellen veröffentlichen, Bewerbungen erhalten und passende Bewerbende finden.
+          </p>
+          <div class="role-note" data-normal="Für Unternehmen und Organisationen" data-easy="Für Firmen">
+            Für Unternehmen und Organisationen
+          </div>
+        </button>
+
+        <button class="role-card seeker" type="button"
+                data-role="Bewerbende" data-accent="#0f766e" data-accent-dark="#115e59">
+          <div class="role-head">
+            <div class="role-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="6"></circle>
+                <path d="M20 20l-4.2-4.2"></path>
+                <path d="M11 8v6"></path>
+                <path d="M8 11h6"></path>
+              </svg>
+            </div>
+            <h3 data-normal="Bewerbende" data-easy="Ich suche eine Stelle">Bewerbende</h3>
+          </div>
+          <p data-normal="Profil erstellen, Stellen suchen und Bewerbungen direkt versenden."
+             data-easy="Du kannst Stellen suchen und dich bewerben.">
+            Profil erstellen, Stellen suchen und Bewerbungen direkt versenden.
+          </p>
+          <div class="role-note" data-normal="Persönliches Bewerberkonto" data-easy="Mein Konto">
+            Persönliches Bewerberkonto
+          </div>
+        </button>
+
+        <button class="role-card supported" type="button"
+                data-role="Bewerbende mit Unterstützung" data-accent="#7c3aed" data-accent-dark="#6d28d9">
+          <div class="role-head">
+            <div class="role-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <circle cx="8" cy="7" r="2.5"></circle>
+                <path d="M8 9.5v5"></path>
+                <path d="M5.5 13h5"></path>
+                <path d="M8 14.5l-2 3"></path>
+                <path d="M8 14.5l2 3"></path>
+                <circle cx="16.5" cy="7.5" r="2.2"></circle>
+                <path d="M16.5 9.7v4"></path>
+                <path d="M16.5 11.2l-4.5 1.2"></path>
+                <path d="M16.5 13.7l-1.6 2.6"></path>
+                <path d="M16.5 13.7l1.7 2.5"></path>
+              </svg>
+            </div>
+            <h3 data-normal="Bewerbende mit Unterstützung" data-easy="Ich suche eine Stelle mit Unterstützung">
+              Bewerbende mit Unterstützung
+            </h3>
+          </div>
+          <p data-normal="Stellen suchen und Bewerbungen gemeinsam mit einer Begleitperson vorbereiten."
+             data-easy="Du suchst Stellen. Eine Begleitperson hilft dir beim Bewerben.">
+            Stellen suchen und Bewerbungen gemeinsam mit einer Begleitperson vorbereiten.
+          </p>
+          <div class="role-note" data-normal="Bewerbung mit Begleitung" data-easy="Mit Unterstützung">
+            Bewerbung mit Begleitung
+          </div>
+        </button>
+
+        <button class="role-card companion" type="button"
+                data-role="Begleitperson" data-accent="#ea580c" data-accent-dark="#c2410c">
+          <div class="role-head">
+            <div class="role-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <rect x="6" y="4" width="12" height="16" rx="2"></rect>
+                <path d="M9 8h6"></path>
+                <path d="M9 12h5"></path>
+                <path d="M9 16h3"></path>
+              </svg>
+            </div>
+            <h3 data-normal="Begleitperson" data-easy="Ich unterstütze beim Bewerben">
+              Begleitperson
+            </h3>
+          </div>
+          <p data-normal="Bewerbende unterstützen, Bewerbungen gemeinsam vorbereiten und den Prozess begleiten."
+             data-easy="Du hilfst einer Person beim Bewerben.">
+            Bewerbende unterstützen, Bewerbungen gemeinsam vorbereiten und den Prozess begleiten.
+          </p>
+          <div class="role-note" data-normal="Unterstützungskonto" data-easy="Unterstützung">
+            Unterstützungskonto
+          </div>
+        </button>
+      </div>
+
+      <div class="section-shell" style="margin-top:22px;">
+        <div class="login-layout">
+          <div class="selected-role">
+            <div data-normal="Ausgewählter Kontotyp" data-easy="Du hast gewählt">Ausgewählter Kontotyp</div>
+            <strong id="selectedRole">Arbeitgeber</strong>
+            <p id="selectedDescription">
+              Als Arbeitgeber kannst du Stellen veröffentlichen und Bewerbungen erhalten.
+            </p>
+          </div>
+
+          <div class="login-card">
+            <div class="tabs">
+              <button id="loginTab" class="tab active" type="button"
+                      data-normal="Einloggen" data-easy="Anmelden">Einloggen</button>
+              <button id="registerTab" class="tab" type="button"
+                      data-normal="Registrieren" data-easy="Konto machen">Registrieren</button>
+            </div>
+
+            <form id="loginForm">
+              <label>
+                E-Mail
+                <input type="email" autocomplete="email" placeholder="name@beispiel.ch" required>
+              </label>
+
+              <label>
+                Passwort
+                <input type="password" autocomplete="current-password" placeholder="Passwort" required>
+              </label>
+
+              <button class="primary-button" type="submit"
+                      data-normal="Einloggen" data-easy="Anmelden">Einloggen</button>
+            </form>
+
+            <form id="registerForm" style="display:none;">
+              <label>
+                Vorname
+                <input type="text" autocomplete="given-name" placeholder="Vorname" required>
+              </label>
+
+              <label>
+                Nachname
+                <input type="text" autocomplete="family-name" placeholder="Nachname" required>
+              </label>
+
+              <label>
+                E-Mail
+                <input type="email" autocomplete="email" placeholder="name@beispiel.ch" required>
+              </label>
+
+              <label>
+                Passwort
+                <input type="password" autocomplete="new-password" placeholder="Mindestens 8 Zeichen" required>
+              </label>
+
+              <div id="companionField" style="display:none;">
+                <label>
+                  <span data-normal="E-Mail der Begleitperson" data-easy="E-Mail von der Begleitperson">
+                    E-Mail der Begleitperson
+                  </span>
+                  <input type="email" placeholder="begleitung@beispiel.ch">
+                </label>
+                <div class="helper" style="margin-top:10px;"
+                     data-normal="Die Begleitperson erhält eine Verknüpfungsanfrage. Danach könnt ihr den Bewerbungsprozess gemeinsam gestalten."
+                     data-easy="Die Begleitperson bekommt eine Anfrage. Danach könnt ihr zusammen Bewerbungen machen.">
+                  Die Begleitperson erhält eine Verknüpfungsanfrage. Danach könnt ihr den Bewerbungsprozess gemeinsam gestalten.
+                </div>
+              </div>
+
+              <button class="primary-button" type="submit"
+                      data-normal="Konto erstellen" data-easy="Konto machen">Konto erstellen</button>
+            </form>
+
+            <div id="statusBox" class="status" aria-live="polite"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="was-ist-naveloa" class="section">
+      <h2 class="section-title">Was ist Naveloa?</h2>
+      <p class="section-lead"
+         data-normal="Naveloa ist eine geplante barrierearme Job- und Netzwerkplattform. Sie soll Menschen dabei helfen, Fähigkeiten sichtbar zu machen und passende berufliche Möglichkeiten zu finden."
+         data-easy="Naveloa ist eine Seite für Arbeit. Menschen können zeigen, was sie gut können. Sie können passende Stellen finden.">
+        Naveloa ist eine geplante barrierearme Job- und Netzwerkplattform. Sie soll Menschen dabei helfen, Fähigkeiten sichtbar zu machen und passende berufliche Möglichkeiten zu finden.
+      </p>
+
+      <div class="info-grid">
+        <div class="info-card">
+          <h3 data-normal="Stärken im Mittelpunkt" data-easy="Was kannst du gut?">Stärken im Mittelpunkt</h3>
+          <p data-normal="Profile zeigen Fähigkeiten, Interessen, Erfahrungen und berufliche Wünsche."
+             data-easy="Im Profil steht, was du gut kannst und was du gerne machen möchtest.">
+            Profile zeigen Fähigkeiten, Interessen, Erfahrungen und berufliche Wünsche.
+          </p>
+        </div>
+
+        <div class="info-card">
+          <h3 data-normal="Unterstützung nach Bedarf" data-easy="Hilfe, wenn du sie brauchst">Unterstützung nach Bedarf</h3>
+          <p data-normal="Wer Unterstützung beim Bewerben möchte, kann eine Begleitperson in den Prozess einbeziehen."
+             data-easy="Eine Begleitperson kann dir beim Bewerben helfen.">
+            Wer Unterstützung beim Bewerben möchte, kann eine Begleitperson in den Prozess einbeziehen.
+          </p>
+        </div>
+
+        <div class="info-card">
+          <h3 data-normal="Barrierearme Nutzung" data-easy="Einfach zu benutzen">Barrierearme Nutzung</h3>
+          <p data-normal="Einfache Sprache, klare Farben, grosse Bedienelemente und Dark Mode erleichtern die Nutzung."
+             data-easy="Klare Wörter, grosse Knöpfe und Farben helfen bei der Nutzung.">
+            Einfache Sprache, klare Farben, grosse Bedienelemente und Dark Mode erleichtern die Nutzung.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section id="rollen" class="section">
+      <h2 class="section-title" data-normal="Kontotypen & Rollen" data-easy="Welche Konten gibt es?">
+        Kontotypen & Rollen
+      </h2>
+      <p class="section-lead"
+         data-normal="Hier wird genauer erklärt, wofür die verschiedenen Konten gedacht sind und welche Funktionen sie erhalten."
+         data-easy="Hier siehst du, was jedes Konto machen kann.">
+        Hier wird genauer erklärt, wofür die verschiedenen Konten gedacht sind und welche Funktionen sie erhalten.
+      </p>
+
+      <div class="section-shell role-details">
+        <article class="role-detail" style="--detail-color:#2563eb;">
+          <h3>Arbeitgeber</h3>
+          <p data-normal="Für Unternehmen, Institutionen und andere Arbeitgebende."
+             data-easy="Für Firmen und Arbeitsstellen.">
+            Für Unternehmen, Institutionen und andere Arbeitgebende.
+          </p>
+          <ul>
+            <li data-normal="Firmenprofil erstellen" data-easy="Firmenprofil machen">Firmenprofil erstellen</li>
+            <li data-normal="Stellenangebote veröffentlichen" data-easy="Stellen anbieten">Stellenangebote veröffentlichen</li>
+            <li data-normal="Bewerbungen empfangen und ansehen" data-easy="Bewerbungen ansehen">Bewerbungen empfangen und ansehen</li>
+            <li data-normal="Kontakt mit Bewerbenden aufnehmen" data-easy="Mit Bewerbenden schreiben">Kontakt mit Bewerbenden aufnehmen</li>
+          </ul>
+        </article>
+
+        <article class="role-detail" style="--detail-color:#0f766e;">
+          <h3 data-normal="Bewerbende" data-easy="Ich suche eine Stelle">Bewerbende</h3>
+          <p data-normal="Für Personen, die ihr Profil und ihre Bewerbungen selbst verwalten möchten."
+             data-easy="Für Personen, die Stellen suchen und sich bewerben.">
+            Für Personen, die ihr Profil und ihre Bewerbungen selbst verwalten möchten.
+          </p>
+          <ul>
+            <li data-normal="Persönliches Profil erstellen" data-easy="Profil machen">Persönliches Profil erstellen</li>
+            <li data-normal="Stärken und Interessen angeben" data-easy="Zeigen, was du gut kannst">Stärken und Interessen angeben</li>
+            <li data-normal="Stellen suchen und speichern" data-easy="Stellen suchen">Stellen suchen und speichern</li>
+            <li data-normal="Bewerbungen direkt versenden" data-easy="Bewerbungen schicken">Bewerbungen direkt versenden</li>
+          </ul>
+        </article>
+
+        <article class="role-detail" style="--detail-color:#7c3aed;">
+          <h3 data-normal="Bewerbende mit Unterstützung" data-easy="Ich suche eine Stelle mit Unterstützung">
+            Bewerbende mit Unterstützung
+          </h3>
+          <p data-normal="Für Personen, die sich beim Bewerbungsprozess Unterstützung durch eine Begleitperson wünschen."
+             data-easy="Für Personen, die Hilfe beim Bewerben möchten.">
+            Für Personen, die sich beim Bewerbungsprozess Unterstützung durch eine Begleitperson wünschen.
+          </p>
+          <ul>
+            <li data-normal="Eigenes persönliches Profil" data-easy="Eigenes Profil">Eigenes persönliches Profil</li>
+            <li data-normal="Stellen selbst ansehen und auswählen" data-easy="Stellen selbst anschauen">Stellen selbst ansehen und auswählen</li>
+            <li data-normal="Eine Bewerbung gemeinsam mit der Begleitperson vorbereiten" data-easy="Bewerbung zusammen machen">Eine Bewerbung gemeinsam mit der Begleitperson vorbereiten</li>
+            <li data-normal="Jederzeit sehen, was mit der Bewerbung passiert" data-easy="Sehen, was mit der Bewerbung passiert">Jederzeit sehen, was mit der Bewerbung passiert</li>
+          </ul>
+        </article>
+
+        <article class="role-detail" style="--detail-color:#ea580c;">
+          <h3 data-normal="Begleitperson" data-easy="Ich unterstütze beim Bewerben">Begleitperson</h3>
+          <p data-normal="Für Fachpersonen oder andere vereinbarte Unterstützungspersonen."
+             data-easy="Für Personen, die beim Bewerben helfen.">
+            Für Fachpersonen oder andere vereinbarte Unterstützungspersonen.
+          </p>
+          <ul>
+            <li data-normal="Mit einem oder mehreren Bewerberprofilen verbunden werden" data-easy="Mit einem Profil verbunden sein">Mit einem oder mehreren Bewerberprofilen verbunden werden</li>
+            <li data-normal="Beim Erstellen von Bewerbungen unterstützen" data-easy="Bei Bewerbungen helfen">Beim Erstellen von Bewerbungen unterstützen</li>
+            <li data-normal="Gemeinsam Texte und Unterlagen prüfen" data-easy="Texte zusammen anschauen">Gemeinsam Texte und Unterlagen prüfen</li>
+            <li data-normal="Den Bewerbungsprozess begleiten, ohne die Person zu bevormunden" data-easy="Unterstützen, aber nicht bestimmen">Den Bewerbungsprozess begleiten, ohne die Person zu bevormunden</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section id="ueber-uns" class="section">
+      <h2 class="section-title">Über uns</h2>
+      <div class="section-shell">
+        <p data-normal="Naveloa ist als Projektidee entstanden, um berufliche Teilhabe einfacher, verständlicher und selbstbestimmter zu gestalten. Die Plattform soll Menschen nicht über eine Beeinträchtigung definieren, sondern über ihre Stärken, Interessen und Ziele."
+           data-easy="Naveloa soll Menschen bei der Arbeitssuche helfen. Wichtig sind die Stärken, Wünsche und Ziele einer Person. Eine Beeinträchtigung steht nicht im Mittelpunkt.">
+          Naveloa ist als Projektidee entstanden, um berufliche Teilhabe einfacher, verständlicher und selbstbestimmter zu gestalten. Die Plattform soll Menschen nicht über eine Beeinträchtigung definieren, sondern über ihre Stärken, Interessen und Ziele.
+        </p>
+      </div>
+    </section>
+
+    <section id="kontakt" class="section">
+      <h2 class="section-title">Kontakt</h2>
+      <p class="section-lead"
+         data-normal="Dieser Bereich ist aktuell noch Teil des Prototyps."
+         data-easy="Diese Seite ist noch ein Test.">
+        Dieser Bereich ist aktuell noch Teil des Prototyps.
+      </p>
+
+      <div class="contact-box">
+        <div class="contact-item">
+          <h3 data-normal="Fragen" data-easy="Du hast eine Frage?">Fragen</h3>
+          <p data-normal="Hier könnte später ein einfaches Kontaktformular eingebaut werden."
+             data-easy="Hier kannst du später eine Nachricht schreiben.">
+            Hier könnte später ein einfaches Kontaktformular eingebaut werden.
+          </p>
+        </div>
+
+        <div class="contact-item">
+          <h3 data-normal="Rückmeldungen zur Barrierefreiheit" data-easy="Ist etwas schwierig?">
+            Rückmeldungen zur Barrierefreiheit
+          </h3>
+          <p data-normal="Nutzende könnten melden, wenn etwas schwer verständlich oder nicht gut bedienbar ist."
+             data-easy="Du kannst sagen, wenn etwas schwer zu verstehen oder zu benutzen ist.">
+            Nutzende könnten melden, wenn etwas schwer verständlich oder nicht gut bedienbar ist.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      Naveloa · Deine Stärken. Deine Chancen. · Prototyp für die Vertiefungsarbeit
+    </footer>
+  </div>
+
+<script>
+  const menuButton = document.getElementById("menuButton");
+  const menu = document.getElementById("mainMenu");
+  const easyToggle = document.getElementById("easyToggle");
+  const darkToggle = document.getElementById("darkToggle");
+  const speechToggle = document.getElementById("speechToggle");
+  const speechControls = document.getElementById("speechControls");
+  const readPageButton = document.getElementById("readPageButton");
+  const pauseSpeechButton = document.getElementById("pauseSpeechButton");
+  const resumeSpeechButton = document.getElementById("resumeSpeechButton");
+  const stopSpeechButton = document.getElementById("stopSpeechButton");
+
+  const roleCards = document.querySelectorAll(".role-card");
+  const selectedRoleEl = document.getElementById("selectedRole");
+  const selectedDescription = document.getElementById("selectedDescription");
+
+  const loginTab = document.getElementById("loginTab");
+  const registerTab = document.getElementById("registerTab");
+  const loginForm = document.getElementById("loginForm");
+  const registerForm = document.getElementById("registerForm");
+  const companionField = document.getElementById("companionField");
+  const statusBox = document.getElementById("statusBox");
+
+  let selectedRole = "Arbeitgeber";
+  let easyMode = localStorage.getItem("naveloaEasy") === "true";
+  let darkMode = localStorage.getItem("naveloaDark") === "true";
+  let speechMode = localStorage.getItem("naveloaSpeech") === "true";
+  let activeSpeechElement = null;
+
+  const descriptions = {
+    "Arbeitgeber": {
+      normal: "Als Arbeitgeber kannst du Stellen veröffentlichen und Bewerbungen erhalten.",
+      easy: "Du kannst Stellen anbieten und Bewerbungen bekommen."
+    },
+    "Bewerbende": {
+      normal: "Als Bewerberkonto kannst du dein Profil verwalten, Stellen suchen und Bewerbungen direkt versenden.",
+      easy: "Du kannst Stellen suchen und Bewerbungen schicken."
+    },
+    "Bewerbende mit Unterstützung": {
+      normal: "Du kannst Stellen suchen und den Bewerbungsprozess gemeinsam mit einer Begleitperson gestalten.",
+      easy: "Du suchst Stellen. Eine Begleitperson hilft dir beim Bewerben."
+    },
+    "Begleitperson": {
+      normal: "Du unterstützt eine Person beim Bewerben und begleitest den Prozess gemeinsam mit ihr.",
+      easy: "Du hilfst einer Person beim Bewerben."
+    }
+  };
+
+  const easyNames = {
+    "Arbeitgeber": "Arbeitgeber",
+    "Bewerbende": "Ich suche eine Stelle",
+    "Bewerbende mit Unterstützung": "Ich suche eine Stelle mit Unterstützung",
+    "Begleitperson": "Ich unterstütze beim Bewerben"
+  };
+
+
+  function cleanSpeechText(text) {
+    return text.replace(/\s+/g, " ").trim();
+  }
+
+  function setSpeakingHighlight(element) {
+    if (activeSpeechElement) {
+      activeSpeechElement.classList.remove("readable-speaking");
+    }
+    activeSpeechElement = element || null;
+    if (activeSpeechElement) {
+      activeSpeechElement.classList.add("readable-speaking");
+    }
+  }
+
+  function stopSpeaking() {
+    window.speechSynthesis.cancel();
+    setSpeakingHighlight(null);
+  }
+
+  function speakText(textToSpeak, element = null) {
+    if (!("speechSynthesis" in window)) {
+      alert(easyMode
+        ? "Dein Browser kann leider nicht vorlesen."
+        : "Die Vorlesefunktion wird von diesem Browser leider nicht unterstützt.");
+      return;
+    }
+
+    const cleaned = cleanSpeechText(textToSpeak);
+    if (!cleaned) return;
+
+    window.speechSynthesis.cancel();
+
+    const utterance = new SpeechSynthesisUtterance(cleaned);
+    utterance.lang = "de-CH";
+    utterance.rate = easyMode ? 0.88 : 0.96;
+    utterance.pitch = 1;
+
+    utterance.onstart = () => setSpeakingHighlight(element);
+    utterance.onend = () => setSpeakingHighlight(null);
+    utterance.onerror = () => setSpeakingHighlight(null);
+
+    window.speechSynthesis.speak(utterance);
+  }
+
+  function getReadablePageText() {
+    const selectors = [
+      ".hero h1",
+      ".hero p",
+      "#was-ist-naveloa .section-title",
+      "#was-ist-naveloa .section-lead",
+      "#was-ist-naveloa .info-card h3",
+      "#was-ist-naveloa .info-card p",
+      "#rollen .section-title",
+      "#rollen .section-lead",
+      "#rollen .role-detail h3",
+      "#rollen .role-detail p",
+      "#rollen .role-detail li",
+      "#ueber-uns .section-title",
+      "#ueber-uns p",
+      "#kontakt .section-title",
+      "#kontakt .section-lead",
+      "#kontakt .contact-item h3",
+      "#kontakt .contact-item p"
+    ];
+
+    return [...document.querySelectorAll(selectors)]
+      .filter(el => el.offsetParent !== null)
+      .map(el => el.textContent.trim())
+      .filter(Boolean)
+      .join(". ");
+  }
+
+  function applySpeechMode() {
+    speechToggle.checked = speechMode;
+    speechControls.classList.toggle("visible", speechMode);
+
+    if (!speechMode) {
+      stopSpeaking();
+    }
+  }
+
+  function speechForInteractiveElement(element) {
+    if (!speechMode) return;
+    const text = element.innerText || element.textContent;
+    speakText(text, element);
+  }
+
+  function applyTheme() {
+    document.body.classList.toggle("dark", darkMode);
+    darkToggle.checked = darkMode;
+  }
+
+  function updateLanguage() {
+    document.querySelectorAll("[data-normal][data-easy]").forEach(el => {
+      el.textContent = easyMode ? el.dataset.easy : el.dataset.normal;
+    });
+
+    easyToggle.checked = easyMode;
+    selectedRoleEl.textContent = easyMode ? easyNames[selectedRole] : selectedRole;
+    selectedDescription.textContent = easyMode
+      ? descriptions[selectedRole].easy
+      : descriptions[selectedRole].normal;
+  }
+
+  function updateRole(card) {
+    roleCards.forEach(c => c.classList.remove("active"));
+    card.classList.add("active");
+
+    selectedRole = card.dataset.role;
+    selectedRoleEl.textContent = easyMode ? easyNames[selectedRole] : selectedRole;
+    selectedDescription.textContent = easyMode
+      ? descriptions[selectedRole].easy
+      : descriptions[selectedRole].normal;
+
+    document.documentElement.style.setProperty("--accent", card.dataset.accent);
+    document.documentElement.style.setProperty("--accent-dark", card.dataset.accentDark);
+
+    companionField.style.display =
+      selectedRole === "Bewerbende mit Unterstützung" ? "block" : "none";
+  }
+
+  menuButton.addEventListener("click", () => {
+    const open = menu.classList.toggle("open");
+    menuButton.setAttribute("aria-expanded", String(open));
+  });
+
+  document.addEventListener("click", (event) => {
+    if (!menu.contains(event.target) && !menuButton.contains(event.target)) {
+      menu.classList.remove("open");
+      menuButton.setAttribute("aria-expanded", "false");
+    }
+  });
+
+  menu.querySelectorAll("a").forEach(link => {
+    link.addEventListener("click", () => {
+      menu.classList.remove("open");
+      menuButton.setAttribute("aria-expanded", "false");
+
+      if (speechMode) {
+        const target = document.querySelector(link.getAttribute("href"));
+        if (target) {
+          setTimeout(() => speakText(target.innerText, target), 250);
+        }
+      }
+    });
+  });
+
+  easyToggle.addEventListener("change", () => {
+    easyMode = easyToggle.checked;
+    localStorage.setItem("naveloaEasy", String(easyMode));
+    updateLanguage();
+  });
+
+  darkToggle.addEventListener("change", () => {
+    darkMode = darkToggle.checked;
+    localStorage.setItem("naveloaDark", String(darkMode));
+    applyTheme();
+  });
+
+  speechToggle.addEventListener("change", () => {
+    speechMode = speechToggle.checked;
+    localStorage.setItem("naveloaSpeech", String(speechMode));
+    applySpeechMode();
+
+    if (speechMode) {
+      speakText(
+        easyMode
+          ? "Vorlesen ist an. Wenn Leichte Sprache an ist, wird der einfache Text vorgelesen."
+          : "Die Vorlesefunktion ist aktiviert. Wenn Einfache Sprache aktiviert ist, wird die vereinfachte Textversion vorgelesen."
+      );
+    }
+  });
+
+  readPageButton.addEventListener("click", () => {
+    speakText(getReadablePageText(), document.querySelector("main") || document.body);
+  });
+
+  pauseSpeechButton.addEventListener("click", () => {
+    if ("speechSynthesis" in window) window.speechSynthesis.pause();
+  });
+
+  resumeSpeechButton.addEventListener("click", () => {
+    if ("speechSynthesis" in window) window.speechSynthesis.resume();
+  });
+
+  stopSpeechButton.addEventListener("click", stopSpeaking);
+
+  roleCards.forEach(card => {
+    card.addEventListener("click", () => {
+      updateRole(card);
+      speechForInteractiveElement(card);
+    });
+  });
+
+  loginTab.addEventListener("click", () => {
+    loginTab.classList.add("active");
+    registerTab.classList.remove("active");
+    loginForm.style.display = "grid";
+    registerForm.style.display = "none";
+    statusBox.style.display = "none";
+  });
+
+  registerTab.addEventListener("click", () => {
+    registerTab.classList.add("active");
+    loginTab.classList.remove("active");
+    registerForm.style.display = "grid";
+    loginForm.style.display = "none";
+    statusBox.style.display = "none";
+    companionField.style.display =
+      selectedRole === "Bewerbende mit Unterstützung" ? "block" : "none";
+  });
+
+  function openDashboard() {
+    if (selectedRole === "Arbeitgeber") {
+      window.location.href = "arbeitgeber.html";
+    } else if (selectedRole === "Begleitperson") {
+      window.location.href = "begleitperson.html";
+    } else {
+      window.location.href = "bewerber.html";
+    }
+  }
+
+  loginForm.addEventListener("submit", event => {
+    event.preventDefault();
+    openDashboard();
+  });
+
+  registerForm.addEventListener("submit", event => {
+    event.preventDefault();
+    if (selectedRole === "Bewerbende mit Unterstützung") {
+      localStorage.setItem("naveloaAccountMode", "supported");
+    } else if (selectedRole === "Bewerbende") {
+      localStorage.setItem("naveloaAccountMode", "independent");
+    }
+    openDashboard();
+  });
+
+  applyTheme();
+  updateLanguage();
+  applySpeechMode();
+</script>
+</body>
+</html>

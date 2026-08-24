@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Naveloa – Bewerberprofil</title>
+  <style>
+    :root{
+      --bg:#f4f7fb;--surface:#fff;--surface2:#f8fafc;--text:#182230;--muted:#667085;
+      --line:#d9e1ea;--accent:#0f766e;--accent2:#ccfbf1;--danger:#b42318;
+      --shadow:0 12px 30px rgba(15,23,42,.08);
+    }
+    body.dark{
+      --bg:#0b1220;--surface:#111c2e;--surface2:#172338;--text:#f8fafc;--muted:#cbd5e1;
+      --line:#334155;--accent:#2dd4bf;--accent2:#134e4a;--shadow:0 12px 30px rgba(0,0,0,.28);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);line-height:1.5}
+    button,input,select,textarea{font:inherit}
+    button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
+      outline:4px solid rgba(15,118,110,.25);outline-offset:2px
+    }
+    .page{max-width:1200px;margin:auto;padding:20px}
+    header{
+      display:flex;justify-content:space-between;gap:18px;align-items:center;
+      background:var(--surface);border:1px solid var(--line);border-radius:18px;
+      padding:14px 16px;box-shadow:var(--shadow);margin-bottom:24px
+    }
+    .brand{font-size:1.35rem;font-weight:900}
+    .tag{font-size:.85rem;color:var(--muted);font-weight:700}
+    .header-actions{display:flex;gap:10px;flex-wrap:wrap}
+    .toggle{
+      display:flex;align-items:center;gap:8px;padding:9px 11px;background:var(--surface2);
+      border:1px solid var(--line);border-radius:12px;font-weight:800
+    }
+    .toggle input{width:18px;height:18px;accent-color:var(--accent)}
+    .layout{display:grid;grid-template-columns:260px 1fr;gap:22px}
+    aside{
+      background:var(--surface);border:1px solid var(--line);border-radius:18px;
+      padding:16px;box-shadow:var(--shadow);height:max-content
+    }
+    .navbtn{
+      width:100%;text-align:left;border:none;background:transparent;color:var(--text);
+      padding:12px;border-radius:11px;font-weight:800;cursor:pointer;margin-bottom:6px
+    }
+    .navbtn.active,.navbtn:hover{background:var(--accent2);color:var(--accent)}
+    main{min-width:0}
+    .hero{
+      background:linear-gradient(135deg,var(--surface),var(--surface2));border:1px solid var(--line);
+      border-radius:22px;padding:26px;box-shadow:var(--shadow);margin-bottom:22px
+    }
+    .hero h1{font-size:clamp(2rem,5vw,3rem);margin-bottom:8px}
+    .hero p{color:var(--muted);max-width:760px}
+    .progress{margin-top:18px;background:var(--line);height:12px;border-radius:999px;overflow:hidden}
+    .progress span{display:block;height:100%;width:58%;background:var(--accent)}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+    .card{
+      background:var(--surface);border:1px solid var(--line);border-radius:18px;
+      padding:20px;box-shadow:var(--shadow)
+    }
+    .card h2{font-size:1.25rem;margin-bottom:6px}
+    .card .intro{color:var(--muted);margin-bottom:16px}
+    .field{margin-bottom:14px}
+    label{display:block;font-weight:800;margin-bottom:6px}
+    input,select,textarea{
+      width:100%;background:var(--surface2);color:var(--text);border:1px solid var(--line);
+      border-radius:11px;padding:12px 13px
+    }
+    textarea{min-height:100px;resize:vertical}
+    .chips{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+    .chip{
+      background:var(--accent2);color:var(--accent);padding:7px 10px;border-radius:999px;
+      font-weight:800;font-size:.9rem;border:1px solid color-mix(in srgb,var(--accent) 25%,transparent)
+    }
+    .btn{
+      border:none;border-radius:11px;padding:12px 15px;font-weight:900;cursor:pointer
+    }
+    .btn.primary{background:var(--accent);color:white}
+    .btn.secondary{background:var(--surface2);color:var(--text);border:1px solid var(--line)}
+    .full{grid-column:1/-1}
+    .profile-preview{
+      display:grid;grid-template-columns:1fr auto;gap:16px;align-items:start
+    }
+    .avatar{
+      width:74px;height:74px;border-radius:50%;display:grid;place-items:center;background:var(--accent2);
+      color:var(--accent);font-weight:900;font-size:1.4rem;border:2px solid color-mix(in srgb,var(--accent) 30%,transparent)
+    }
+    .meta{color:var(--muted);margin-top:6px}
+    .travel{
+      display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:14px
+    }
+    .travelbox{
+      border:1px solid var(--line);border-radius:14px;padding:14px;background:var(--surface2)
+    }
+    .travelbox strong{display:block;font-size:1.15rem}
+    .good{border-left:6px solid #16a34a}.medium{border-left:6px solid #d97706}.long{border-left:6px solid #dc2626}
+    .support-note{
+      background:color-mix(in srgb,#7c3aed 9%,var(--surface));border-left:5px solid #7c3aed;
+      border-radius:12px;padding:14px;color:var(--muted)
+    }
+    .job{
+      border:1px solid var(--line);border-radius:16px;padding:16px;background:var(--surface2);margin-bottom:12px
+    }
+    .jobtop{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .job h3{margin-bottom:4px}
+    .status{font-weight:900}
+    .status.good{color:#15803d;border:0}.status.medium{color:#b45309;border:0}.status.long{color:#b91c1c;border:0}
+    .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+
+    .home-link{display:inline-flex;align-items:center;text-decoration:none;color:var(--text);font-weight:900;padding:9px 11px;border:1px solid var(--line);background:var(--surface2);border-radius:12px}
+    .home-link:hover{color:var(--accent);border-color:var(--accent)}
+    @media(max-width:900px){.layout{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.travel{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <div>
+      <div class="brand">Naveloa</div>
+      <div class="tag">Deine Stärken. Deine Chancen.</div>
+    </div>
+    <div class="header-actions">
+      <a class="home-link" href="index.html">Startseite</a>
+      <label class="toggle"><input id="easyToggle" type="checkbox"> <span>Einfache Sprache</span></label>
+      <label class="toggle"><input id="speechToggle" type="checkbox"> <span>Vorlesen</span></label>
+      <label class="toggle"><input id="darkToggle" type="checkbox"> <span>Dark Mode</span></label>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside>
+      <button class="navbtn active" data-target="profil">Mein Profil</button>
+      <button class="navbtn" data-target="stellen">Stellen finden</button>
+      <button class="navbtn" data-target="bewerbungen">Meine Bewerbungen</button>
+      <button class="navbtn" data-target="begleitung">Meine Begleitung</button>
+    </aside>
+
+    <main>
+      <section class="hero">
+        <h1 data-normal="Willkommen bei deinem Profil" data-easy="Das ist dein Profil">Willkommen bei deinem Profil</h1>
+        <p data-normal="Zeige deine Stärken, Interessen und Erfahrungen. Arbeitgeber sehen nur die Informationen, die für die Arbeit wichtig sind."
+           data-easy="Hier kannst du zeigen, was du gut kannst und welche Arbeit du suchst.">
+          Zeige deine Stärken, Interessen und Erfahrungen. Arbeitgeber sehen nur die Informationen, die für die Arbeit wichtig sind.
+        </p>
+        <div class="progress" aria-label="Profil zu 58 Prozent vollständig"><span></span></div>
+      </section>
+
+      <section id="profil" class="grid">
+        <article class="card">
+          <h2 data-normal="Über mich" data-easy="Über mich">Über mich</h2>
+          <p class="intro" data-normal="Grundinformationen für dein Bewerberprofil." data-easy="Wichtige Infos über dich.">Grundinformationen für dein Bewerberprofil.</p>
+          <div class="field"><label>Vorname</label><input id="firstName" value="Alex"></div>
+          <div class="field"><label>Nachname</label><input id="lastName" value="Muster"></div>
+          <div class="field"><label data-normal="Wohnort / Region" data-easy="Wo wohnst du?">Wohnort / Region</label><input id="location" value="Liestal BL"></div>
+          <div class="field"><label data-normal="Kurz über mich" data-easy="Erzähl kurz über dich">Kurz über mich</label>
+            <textarea id="about">Ich arbeite gerne im Team, bin zuverlässig und mag praktische Aufgaben.</textarea>
+          </div>
+        </article>
+
+        <article class="card">
+          <h2 data-normal="Was suche ich?" data-easy="Welche Arbeit suche ich?">Was suche ich?</h2>
+          <p class="intro" data-normal="Diese Angaben helfen Naveloa, passende Stellen zu finden." data-easy="Damit finden wir passende Stellen.">Diese Angaben helfen Naveloa, passende Stellen zu finden.</p>
+          <div class="field"><label>Berufsbereich</label>
+            <select id="field"><option>Gastronomie</option><option>Garten & Natur</option><option>Logistik</option><option>Verkauf</option><option>Büro</option></select>
+          </div>
+          <div class="field"><label>Pensum</label><select id="pensum"><option>40–60 %</option><option>60–80 %</option><option>80–100 %</option></select></div>
+          <div class="field"><label data-normal="Maximaler Arbeitsweg" data-easy="Wie lange willst du höchstens fahren?">Maximaler Arbeitsweg</label>
+            <select id="maxTravel"><option value="30">30 Minuten</option><option value="45" selected>45 Minuten</option><option value="60">60 Minuten</option><option value="90">90 Minuten</option></select>
+          </div>
+          <div class="field"><label data-normal="Verkehrsmittel" data-easy="Wie fährst du zur Arbeit?">Verkehrsmittel</label>
+            <select id="transport"><option>ÖV</option><option>Auto</option><option>Fahrrad</option><option>Zu Fuss</option></select>
+          </div>
+        </article>
+
+        <article class="card">
+          <h2 data-normal="Meine Stärken" data-easy="Was kann ich gut?">Meine Stärken</h2>
+          <p class="intro" data-normal="Stärken stehen im Mittelpunkt deines Profils." data-easy="Wähle Dinge, die du gut kannst.">Stärken stehen im Mittelpunkt deines Profils.</p>
+          <div class="chips" id="strengths">
+            <span class="chip">Zuverlässig</span><span class="chip">Freundlich</span><span class="chip">Sorgfältig</span><span class="chip">Teamarbeit</span>
+          </div>
+          <div class="field" style="margin-top:16px"><label data-normal="Weitere Stärke hinzufügen" data-easy="Noch eine Stärke">Weitere Stärke hinzufügen</label>
+            <input id="newStrength" placeholder="z. B. geduldig">
+          </div>
+          <button class="btn secondary" id="addStrength" type="button">Hinzufügen</button>
+        </article>
+
+        <article class="card">
+          <h2 data-normal="Interessen & Fähigkeiten" data-easy="Was mache ich gerne?">Interessen & Fähigkeiten</h2>
+          <div class="field"><label>Interessen</label><textarea id="interests">Kochen, Tiere, Garten, Kundenkontakt</textarea></div>
+          <div class="field"><label data-normal="Praktische Fähigkeiten" data-easy="Was kannst du bei der Arbeit machen?">Praktische Fähigkeiten</label>
+            <textarea id="skills">Einfache Küchenarbeiten, Tische vorbereiten, Waren einräumen, Pflanzen pflegen</textarea>
+          </div>
+        </article>
+
+        <article class="card">
+          <h2 data-normal="Erfahrungen" data-easy="Was hast du schon gemacht?">Erfahrungen</h2>
+          <div class="field"><label data-normal="Arbeit, Praktika oder Kurse" data-easy="Arbeit oder Praktikum">Arbeit, Praktika oder Kurse</label>
+            <textarea id="experience">6 Monate Praktikum in einem Café. Mitarbeit in einer Gärtnerei.</textarea>
+          </div>
+        </article>
+
+        <article class="card">
+          <h2 data-normal="Das hilft mir bei der Arbeit" data-easy="Welche Hilfe ist gut für mich?">Das hilft mir bei der Arbeit</h2>
+          <p class="intro" data-normal="Beschreibe Unterstützung, mit der du gut arbeiten kannst. Eine Diagnose musst du hier nicht angeben."
+             data-easy="Schreibe, was dir bei der Arbeit hilft. Du musst keine Diagnose schreiben.">
+            Beschreibe Unterstützung, mit der du gut arbeiten kannst. Eine Diagnose musst du hier nicht angeben.
+          </p>
+          <div class="field"><textarea id="support">Klare kurze Arbeitsaufträge, neue Aufgaben zuerst gemeinsam anschauen, feste Ansprechperson bei Fragen.</textarea></div>
+        </article>
+
+        <article class="card full">
+          <div class="profile-preview">
+            <div>
+              <h2 data-normal="So sehen Arbeitgeber dein Profil" data-easy="So sehen Firmen dein Profil">So sehen Arbeitgeber dein Profil</h2>
+              <p class="intro" data-normal="Die genaue Wohnadresse wird nicht angezeigt. Sichtbar ist nur die Region und der geschätzte Arbeitsweg zur Stelle."
+                 data-easy="Firmen sehen nicht deine genaue Adresse. Sie sehen nur die Region und wie lange der Weg ungefähr dauert.">
+                Die genaue Wohnadresse wird nicht angezeigt. Sichtbar ist nur die Region und der geschätzte Arbeitsweg zur Stelle.
+              </p>
+              <h3 id="previewName">Alex Muster</h3>
+              <div class="meta" id="previewMeta">Liestal BL · Gastronomie · 40–60 %</div>
+              <p id="previewAbout" style="margin-top:12px">Ich arbeite gerne im Team, bin zuverlässig und mag praktische Aufgaben.</p>
+            </div>
+            <div class="avatar">AM</div>
+          </div>
+
+          <div class="travel">
+            <div class="travelbox good"><span data-normal="Beispielstelle" data-easy="Stelle">Beispielstelle</span><strong>Café Basel</strong></div>
+            <div class="travelbox"><span data-normal="Geschätzter Arbeitsweg" data-easy="Arbeitsweg">Geschätzter Arbeitsweg</span><strong id="travelTime">32 Min. mit ÖV</strong></div>
+            <div class="travelbox good" id="travelRating"><span data-normal="Einschätzung" data-easy="Passt der Weg?">Einschätzung</span><strong id="travelText">Gut erreichbar</strong></div>
+          </div>
+        </article>
+
+        <article class="card full">
+          <button class="btn primary" id="saveProfile" type="button" data-normal="Profil speichern" data-easy="Profil speichern">Profil speichern</button>
+          <span id="saveStatus" style="margin-left:12px;color:var(--muted)" aria-live="polite"></span>
+        </article>
+      </section>
+
+      <section id="stellen" class="card" style="display:none">
+        <h2 data-normal="Passende Stellen" data-easy="Stellen für dich">Passende Stellen</h2>
+        <p class="intro" data-normal="Die Fahrzeit ist hier noch eine Demo. Später kann sie über einen Kartendienst automatisch berechnet werden."
+           data-easy="Die Fahrzeit ist jetzt nur ein Beispiel. Später wird sie automatisch berechnet.">
+          Die Fahrzeit ist hier noch eine Demo. Später kann sie über einen Kartendienst automatisch berechnet werden.
+        </p>
+
+        <div class="job">
+          <div class="jobtop">
+            <div><h3>Mitarbeit Café</h3><p>Basel · 50–70 % · Gastronomie</p></div>
+            <div class="status good">32 Min. · Gut erreichbar</div>
+          </div>
+          <button class="btn primary" style="margin-top:12px">Stelle ansehen</button>
+        </div>
+
+        <div class="job">
+          <div class="jobtop">
+            <div><h3>Mitarbeit Küche</h3><p>Pratteln · 60 % · Gastronomie</p></div>
+            <div class="status medium">44 Min. · Machbar</div>
+          </div>
+          <button class="btn primary" style="margin-top:12px">Stelle ansehen</button>
+        </div>
+
+        <div class="job">
+          <div class="jobtop">
+            <div><h3>Mitarbeit Restaurant</h3><p>Bern · 60–80 % · Gastronomie</p></div>
+            <div class="status long">78 Min. · Langer Arbeitsweg</div>
+          </div>
+          <button class="btn primary" style="margin-top:12px">Stelle ansehen</button>
+        </div>
+      </section>
+
+      <section id="bewerbungen" class="card" style="display:none">
+        <h2>Meine Bewerbungen</h2>
+        <p class="intro">Hier werden später laufende, versendete und beantwortete Bewerbungen angezeigt.</p>
+        <div class="job"><h3>Mitarbeit Café</h3><p>Status: Bewerbung wird vorbereitet</p></div>
+      </section>
+
+      <section id="begleitung" class="card" style="display:none">
+        <h2 data-normal="Meine Begleitung" data-easy="Meine Unterstützung">Meine Begleitung</h2>
+        <div class="support-note"
+             data-normal="Wenn du eine Begleitperson verbunden hast, kann sie dich beim Erstellen und Überarbeiten von Bewerbungen unterstützen. Du siehst weiterhin alle Änderungen und Schritte."
+             data-easy="Eine Begleitperson kann dir beim Bewerben helfen. Du kannst immer sehen, was gemacht wird.">
+          Wenn du eine Begleitperson verbunden hast, kann sie dich beim Erstellen und Überarbeiten von Bewerbungen unterstützen. Du siehst weiterhin alle Änderungen und Schritte.
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<script>
+let easyMode = localStorage.getItem("naveloaEasy") === "true";
+let darkMode = localStorage.getItem("naveloaDark") === "true";
+let speechMode = localStorage.getItem("naveloaSpeech") === "true";
+
+const easyToggle = document.getElementById("easyToggle");
+const darkToggle = document.getElementById("darkToggle");
+const speechToggle = document.getElementById("speechToggle");
+
+function updateLanguage(){
+  document.querySelectorAll("[data-normal][data-easy]").forEach(el=>{
+    el.textContent = easyMode ? el.dataset.easy : el.dataset.normal;
+  });
+}
+function applyModes(){
+  document.body.classList.toggle("dark",darkMode);
+  easyToggle.checked=easyMode; darkToggle.checked=darkMode; speechToggle.checked=speechMode;
+  updateLanguage();
+}
+function speak(text){
+  if(!speechMode || !("speechSynthesis" in window)) return;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text.replace(/\s+/g," ").trim());
+  u.lang="de-CH";u.rate=easyMode?.88:.96;speechSynthesis.speak(u);
+}
+
+easyToggle.addEventListener("change",()=>{easyMode=easyToggle.checked;localStorage.setItem("naveloaEasy",easyMode);updateLanguage()});
+darkToggle.addEventListener("change",()=>{darkMode=darkToggle.checked;localStorage.setItem("naveloaDark",darkMode);applyModes()});
+speechToggle.addEventListener("change",()=>{speechMode=speechToggle.checked;localStorage.setItem("naveloaSpeech",speechMode);if(speechMode)speak(easyMode?"Vorlesen ist an.":"Die Vorlesefunktion ist aktiviert.")});
+
+document.querySelectorAll(".navbtn").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    document.querySelectorAll(".navbtn").forEach(b=>b.classList.remove("active"));
+    btn.classList.add("active");
+    ["profil","stellen","bewerbungen","begleitung"].forEach(id=>document.getElementById(id).style.display="none");
+    const target=document.getElementById(btn.dataset.target);
+    target.style.display = btn.dataset.target==="profil" ? "grid" : "block";
+    speak(target.innerText);
+  });
+});
+
+document.getElementById("addStrength").addEventListener("click",()=>{
+  const inp=document.getElementById("newStrength");
+  if(!inp.value.trim())return;
+  const span=document.createElement("span");span.className="chip";span.textContent=inp.value.trim();
+  document.getElementById("strengths").appendChild(span);inp.value="";
+});
+
+function updatePreview(){
+  const fn=document.getElementById("firstName").value;
+  const ln=document.getElementById("lastName").value;
+  const loc=document.getElementById("location").value;
+  const field=document.getElementById("field").value;
+  const pensum=document.getElementById("pensum").value;
+  document.getElementById("previewName").textContent=(fn+" "+ln).trim()||"Dein Name";
+  document.getElementById("previewMeta").textContent=`${loc} · ${field} · ${pensum}`;
+  document.getElementById("previewAbout").textContent=document.getElementById("about").value;
+}
+["firstName","lastName","location","field","pensum","about"].forEach(id=>{
+  document.getElementById(id).addEventListener("input",updatePreview);
+  document.getElementById(id).addEventListener("change",updatePreview);
+});
+
+function updateTravel(){
+  const max=Number(document.getElementById("maxTravel").value);
+  const demo=32;
+  const transport=document.getElementById("transport").value;
+  document.getElementById("travelTime").textContent=`${demo} Min. mit ${transport}`;
+  const box=document.getElementById("travelRating");
+  box.classList.remove("good","medium","long");
+  let text="";
+  if(demo <= Math.min(30,max)){box.classList.add("good");text=easyMode?"Gut":"Gut erreichbar";}
+  else if(demo <= max){box.classList.add("medium");text=easyMode?"Geht noch":"Machbar";}
+  else{box.classList.add("long");text=easyMode?"Zu weit":"Langer Arbeitsweg";}
+  document.getElementById("travelText").textContent=text;
+}
+document.getElementById("maxTravel").addEventListener("change",updateTravel);
+document.getElementById("transport").addEventListener("change",updateTravel);
+
+document.getElementById("saveProfile").addEventListener("click",()=>{
+  const data={
+    firstName:document.getElementById("firstName").value,
+    lastName:document.getElementById("lastName").value,
+    location:document.getElementById("location").value,
+    about:document.getElementById("about").value,
+    field:document.getElementById("field").value,
+    pensum:document.getElementById("pensum").value,
+    maxTravel:document.getElementById("maxTravel").value,
+    transport:document.getElementById("transport").value,
+    interests:document.getElementById("interests").value,
+    skills:document.getElementById("skills").value,
+    experience:document.getElementById("experience").value,
+    support:document.getElementById("support").value
+  };
+  localStorage.setItem("naveloaApplicantProfile",JSON.stringify(data));
+  document.getElementById("saveStatus").textContent=easyMode?"Gespeichert.":"Profil wurde lokal im Browser gespeichert.";
+  speak(document.getElementById("saveStatus").textContent);
+});
+
+applyModes();updatePreview();updateTravel();
+</script>
+</body>
+</html>

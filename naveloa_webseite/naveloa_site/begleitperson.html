@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Naveloa – Begleitpersonen Dashboard</title>
+  <style>
+    :root{
+      --bg:#f4f7fb;--surface:#fff;--surface2:#f8fafc;--text:#182230;--muted:#667085;
+      --line:#d9e1ea;--accent:#ea580c;--accent2:#ffedd5;--accentDark:#c2410c;
+      --support:#7c3aed;--support2:#ede9fe;--shadow:0 12px 30px rgba(15,23,42,.08);
+    }
+    body.dark{
+      --bg:#0b1220;--surface:#111c2e;--surface2:#172338;--text:#f8fafc;--muted:#cbd5e1;
+      --line:#334155;--accent:#fb923c;--accent2:#7c2d12;--accentDark:#f97316;
+      --support:#c4b5fd;--support2:#4c1d95;--shadow:0 12px 30px rgba(0,0,0,.28);
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);line-height:1.5}
+    button,input,textarea{font:inherit}
+    button:focus-visible,input:focus-visible,textarea:focus-visible{
+      outline:4px solid rgba(234,88,12,.25);outline-offset:2px
+    }
+    .page{max-width:1200px;margin:auto;padding:20px}
+    header{
+      display:flex;justify-content:space-between;gap:16px;align-items:center;flex-wrap:wrap;
+      background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:14px 16px;
+      box-shadow:var(--shadow);margin-bottom:24px
+    }
+    .brand{font-size:1.35rem;font-weight:900}.tag{font-size:.85rem;color:var(--muted);font-weight:700}
+    .header-actions{display:flex;gap:10px;flex-wrap:wrap}
+    .toggle{
+      display:flex;align-items:center;gap:8px;padding:9px 11px;border:1px solid var(--line);
+      background:var(--surface2);border-radius:12px;font-weight:800
+    }
+    .toggle input{width:18px;height:18px;accent-color:var(--accent)}
+    .layout{display:grid;grid-template-columns:260px 1fr;gap:22px}
+    aside{
+      background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px;
+      box-shadow:var(--shadow);height:max-content
+    }
+    .navbtn{
+      width:100%;text-align:left;border:none;background:transparent;color:var(--text);
+      padding:12px;border-radius:11px;font-weight:800;cursor:pointer;margin-bottom:6px
+    }
+    .navbtn.active,.navbtn:hover{background:var(--accent2);color:var(--accent)}
+    .hero{
+      background:linear-gradient(135deg,var(--surface),var(--surface2));border:1px solid var(--line);
+      border-radius:22px;padding:26px;box-shadow:var(--shadow);margin-bottom:22px
+    }
+    .hero h1{font-size:clamp(2rem,5vw,3rem);margin-bottom:8px}
+    .hero p{color:var(--muted);max-width:820px}
+    .stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:20px}
+    .stat{background:var(--surface);border:1px solid var(--line);border-radius:15px;padding:15px}
+    .stat strong{display:block;font-size:1.5rem}.stat span{color:var(--muted);font-size:.92rem}
+    .card{
+      background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:var(--shadow)
+    }
+    .card h2{font-size:1.25rem;margin-bottom:6px}.intro{color:var(--muted);margin-bottom:16px}
+    .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.full{grid-column:1/-1}
+    .person{
+      border:1px solid var(--line);border-radius:16px;padding:16px;background:var(--surface2);
+      display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:start;margin-bottom:12px
+    }
+    .avatar{
+      width:62px;height:62px;border-radius:50%;display:grid;place-items:center;background:var(--support2);
+      color:var(--support);font-weight:900;font-size:1.1rem
+    }
+    .person h3{margin-bottom:3px}.meta{color:var(--muted);font-size:.94rem}
+    .badge{
+      display:inline-block;border-radius:999px;padding:6px 9px;font-size:.86rem;font-weight:800;
+      background:var(--accent2);color:var(--accent)
+    }
+    .btn{
+      border:none;border-radius:11px;padding:11px 14px;font-weight:900;cursor:pointer
+    }
+    .btn.primary{background:var(--accent);color:white}.btn.primary:hover{background:var(--accentDark)}
+    .btn.secondary{background:var(--surface);color:var(--text);border:1px solid var(--line)}
+    .supportbox{
+      border-left:5px solid var(--support);background:color-mix(in srgb,var(--support) 8%,var(--surface));
+      padding:14px;border-radius:11px;color:var(--muted)
+    }
+    .application{
+      border:1px solid var(--line);border-radius:16px;padding:17px;background:var(--surface2);margin-bottom:12px
+    }
+    .apptop{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    .application p{color:var(--muted)}
+    textarea,input{
+      width:100%;background:var(--surface2);color:var(--text);border:1px solid var(--line);
+      border-radius:11px;padding:12px 13px
+    }
+    textarea{min-height:120px;resize:vertical}
+    label{display:block;font-weight:800;margin-bottom:6px}
+    .field{margin-bottom:14px}
+    .editbox{
+      margin-top:14px;border-top:1px solid var(--line);padding-top:14px;display:none
+    }
+    .editbox.open{display:block}
+    .timeline{display:grid;gap:10px;margin-top:12px}
+    .step{
+      display:grid;grid-template-columns:28px 1fr;gap:10px;align-items:start
+    }
+    .dot{
+      width:24px;height:24px;border-radius:50%;display:grid;place-items:center;
+      background:var(--accent2);color:var(--accent);font-weight:900;font-size:.8rem
+    }
+    .step p{color:var(--muted)}
+    .success{
+      display:none;margin-top:12px;background:#f0fdf4;color:#166534;border:1px solid #86efac;
+      border-radius:11px;padding:11px 12px
+    }
+    body.dark .success{background:#123524;color:#bbf7d0;border-color:#166534}
+
+    .home-link{display:inline-flex;align-items:center;text-decoration:none;color:var(--text);font-weight:900;padding:9px 11px;border:1px solid var(--line);background:var(--surface2);border-radius:12px}
+    .home-link:hover{color:var(--accent);border-color:var(--accent)}
+    @media(max-width:900px){.layout{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.stats{grid-template-columns:1fr}.person{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <div>
+      <div class="brand">Naveloa</div>
+      <div class="tag">Deine Stärken. Deine Chancen.</div>
+    </div>
+    <div class="header-actions">
+      <a class="home-link" href="index.html">Startseite</a>
+      <label class="toggle"><input id="easyToggle" type="checkbox"> <span>Einfache Sprache</span></label>
+      <label class="toggle"><input id="speechToggle" type="checkbox"> <span>Vorlesen</span></label>
+      <label class="toggle"><input id="darkToggle" type="checkbox"> <span>Dark Mode</span></label>
+    </div>
+  </header>
+
+  <div class="layout">
+    <aside>
+      <button class="navbtn active" data-target="uebersicht">Übersicht</button>
+      <button class="navbtn" data-target="personen">Begleitete Personen</button>
+      <button class="navbtn" data-target="bewerbungen">Bewerbungen begleiten</button>
+      <button class="navbtn" data-target="verknuepfungen">Verknüpfungen</button>
+    </aside>
+
+    <main>
+      <section class="hero">
+        <h1 data-normal="Begleitpersonen-Dashboard" data-easy="Deine Unterstützungs-Seite">Begleitpersonen-Dashboard</h1>
+        <p data-normal="Unterstütze Bewerbende beim Erstellen von Profilen und Bewerbungen. Die bewerbende Person bleibt jederzeit beteiligt und sieht alle Schritte."
+           data-easy="Du hilfst beim Bewerben. Die Person sieht immer, was gemacht wird.">
+          Unterstütze Bewerbende beim Erstellen von Profilen und Bewerbungen. Die bewerbende Person bleibt jederzeit beteiligt und sieht alle Schritte.
+        </p>
+        <div class="stats">
+          <div class="stat"><strong>2</strong><span data-normal="Verbundene Personen" data-easy="Personen, die du unterstützt">Verbundene Personen</span></div>
+          <div class="stat"><strong>3</strong><span data-normal="Bewerbungen in Arbeit" data-easy="Bewerbungen in Arbeit">Bewerbungen in Arbeit</span></div>
+          <div class="stat"><strong>1</strong><span data-normal="Neue Verknüpfungsanfrage" data-easy="Neue Anfrage">Neue Verknüpfungsanfrage</span></div>
+        </div>
+      </section>
+
+      <section id="uebersicht" class="grid">
+        <article class="card">
+          <h2 data-normal="Aktuelle Bewerbungen" data-easy="Bewerbungen, bei denen du hilfst">Aktuelle Bewerbungen</h2>
+          <div class="application">
+            <div class="apptop">
+              <div>
+                <h3>Alex Muster → Mitarbeit Café</h3>
+                <p>Basel · Arbeitsweg ca. 32 Min.</p>
+              </div>
+              <span class="badge">Text gemeinsam prüfen</span>
+            </div>
+          </div>
+          <div class="application">
+            <div class="apptop">
+              <div>
+                <h3>Lea Meier → Mitarbeit Küche</h3>
+                <p>Pratteln · Arbeitsweg ca. 20 Min.</p>
+              </div>
+              <span class="badge">Unterlagen ergänzen</span>
+            </div>
+          </div>
+          <button class="btn primary" type="button" onclick="showSection('bewerbungen')">Bewerbungen öffnen</button>
+        </article>
+
+        <article class="card">
+          <h2 data-normal="Wichtig für die Begleitung" data-easy="So hilfst du">Wichtig für die Begleitung</h2>
+          <div class="supportbox"
+               data-normal="Die Begleitperson unterstützt. Entscheidungen und Inhalte werden gemeinsam mit der bewerbenden Person besprochen. Änderungen sollen sichtbar und nachvollziehbar bleiben."
+               data-easy="Du hilfst. Du entscheidest nicht alleine. Die Person sieht alle Änderungen.">
+            Die Begleitperson unterstützt. Entscheidungen und Inhalte werden gemeinsam mit der bewerbenden Person besprochen. Änderungen sollen sichtbar und nachvollziehbar bleiben.
+          </div>
+        </article>
+      </section>
+
+      <section id="personen" class="card" style="display:none">
+        <h2 data-normal="Begleitete Personen" data-easy="Personen, die du unterstützt">Begleitete Personen</h2>
+        <p class="intro" data-normal="Hier siehst du nur Personen, die einer Verknüpfung zugestimmt haben."
+           data-easy="Du siehst nur Personen, die dich verbunden haben.">
+          Hier siehst du nur Personen, die einer Verknüpfung zugestimmt haben.
+        </p>
+
+        <article class="person">
+          <div class="avatar">AM</div>
+          <div>
+            <h3>Alex Muster</h3>
+            <div class="meta">Liestal BL · Gastronomie · 40–60 %</div>
+            <p style="margin-top:8px">Aktuell: Bewerbung für Mitarbeit Café</p>
+          </div>
+          <button class="btn secondary" type="button">Profil gemeinsam ansehen</button>
+        </article>
+
+        <article class="person">
+          <div class="avatar">LM</div>
+          <div>
+            <h3>Lea Meier</h3>
+            <div class="meta">Pratteln · Gastronomie · 60–80 %</div>
+            <p style="margin-top:8px">Aktuell: Bewerbung für Mitarbeit Küche</p>
+          </div>
+          <button class="btn secondary" type="button">Profil gemeinsam ansehen</button>
+        </article>
+      </section>
+
+      <section id="bewerbungen" class="card" style="display:none">
+        <h2 data-normal="Bewerbungen begleiten" data-easy="Beim Bewerben helfen">Bewerbungen begleiten</h2>
+        <p class="intro" data-normal="Bearbeite Texte gemeinsam mit der bewerbenden Person und halte Änderungen transparent."
+           data-easy="Ihr könnt den Text zusammen ändern. Die Person sieht die Änderungen.">
+          Bearbeite Texte gemeinsam mit der bewerbenden Person und halte Änderungen transparent.
+        </p>
+
+        <article class="application">
+          <div class="apptop">
+            <div>
+              <h3>Alex Muster → Mitarbeit Café</h3>
+              <p>Basel · 50–70 % · ca. 32 Min. Arbeitsweg</p>
+            </div>
+            <span class="badge">In Bearbeitung</span>
+          </div>
+
+          <div class="timeline">
+            <div class="step"><div class="dot">1</div><div><strong>Stelle ausgewählt</strong><p>Alex hat die Stelle selbst ausgewählt.</p></div></div>
+            <div class="step"><div class="dot">2</div><div><strong>Bewerbung begonnen</strong><p>Der Bewerbungstext wurde gemeinsam vorbereitet.</p></div></div>
+            <div class="step"><div class="dot">3</div><div><strong>Gemeinsam prüfen</strong><p>Ihr könnt den Text jetzt zusammen überarbeiten.</p></div></div>
+            <div class="step"><div class="dot">4</div><div><strong>Versenden</strong><p>Die Bewerbung wird nach gemeinsamer Bestätigung verschickt.</p></div></div>
+          </div>
+
+          <button class="btn primary editToggle" type="button" style="margin-top:14px">Bewerbung gemeinsam bearbeiten</button>
+
+          <div class="editbox">
+            <div class="field">
+              <label data-normal="Bewerbungstext" data-easy="Text für die Bewerbung">Bewerbungstext</label>
+              <textarea id="applicationText">Guten Tag. Ich interessiere mich für die Stelle im Café. Ich arbeite gerne im Team und habe bereits Erfahrung aus einem Praktikum.</textarea>
+            </div>
+
+            <div class="field">
+              <label data-normal="Notiz für die bewerbende Person" data-easy="Nachricht an Alex">Notiz für die bewerbende Person</label>
+              <textarea id="supportNote" placeholder="z. B. Wollen wir noch deine Erfahrung in der Gärtnerei erwähnen?"></textarea>
+            </div>
+
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <button class="btn secondary" id="saveDraft" type="button">Entwurf speichern</button>
+              <button class="btn primary" id="markReady" type="button"
+                      data-normal="Zur gemeinsamen Bestätigung markieren"
+                      data-easy="Als fertig markieren">Zur gemeinsamen Bestätigung markieren</button>
+            </div>
+
+            <div id="editStatus" class="success" aria-live="polite"></div>
+          </div>
+        </article>
+      </section>
+
+      <section id="verknuepfungen" class="card" style="display:none">
+        <h2 data-normal="Verknüpfungen" data-easy="Verbindungen">Verknüpfungen</h2>
+        <p class="intro" data-normal="Eine Verbindung entsteht nur, wenn beide Seiten zustimmen."
+           data-easy="Beide Personen müssen Ja zur Verbindung sagen.">
+          Eine Verbindung entsteht nur, wenn beide Seiten zustimmen.
+        </p>
+
+        <div class="application">
+          <div class="apptop">
+            <div>
+              <h3>Neue Anfrage von Mia Keller</h3>
+              <p data-normal="Mia möchte dich als Begleitperson mit ihrem Naveloa-Profil verbinden."
+                 data-easy="Mia möchte, dass du ihr beim Bewerben hilfst.">
+                Mia möchte dich als Begleitperson mit ihrem Naveloa-Profil verbinden.
+              </p>
+            </div>
+            <span class="badge">Neue Anfrage</span>
+          </div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+            <button class="btn primary" id="connectAccept" type="button"
+                    data-normal="Verknüpfung bestätigen" data-easy="Verbindung bestätigen">Verknüpfung bestätigen</button>
+            <button class="btn secondary" id="connectLater" type="button"
+                    data-normal="Später ansehen" data-easy="Später">Später ansehen</button>
+          </div>
+          <div id="connectionStatus" class="success" aria-live="polite"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+</div>
+
+<script>
+let easyMode=localStorage.getItem("naveloaEasy")==="true";
+let darkMode=localStorage.getItem("naveloaDark")==="true";
+let speechMode=localStorage.getItem("naveloaSpeech")==="true";
+
+const easyToggle=document.getElementById("easyToggle");
+const darkToggle=document.getElementById("darkToggle");
+const speechToggle=document.getElementById("speechToggle");
+
+function updateLanguage(){
+  document.querySelectorAll("[data-normal][data-easy]").forEach(el=>{
+    el.textContent=easyMode?el.dataset.easy:el.dataset.normal;
+  });
+}
+function applyModes(){
+  document.body.classList.toggle("dark",darkMode);
+  easyToggle.checked=easyMode;darkToggle.checked=darkMode;speechToggle.checked=speechMode;
+  updateLanguage();
+}
+function speak(text){
+  if(!speechMode||!("speechSynthesis"in window))return;
+  speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(text.replace(/\s+/g," ").trim());
+  u.lang="de-CH";u.rate=easyMode?.88:.96;speechSynthesis.speak(u);
+}
+function showSection(id){
+  ["uebersicht","personen","bewerbungen","verknuepfungen"].forEach(x=>document.getElementById(x).style.display="none");
+  const target=document.getElementById(id);
+  target.style.display=id==="uebersicht"?"grid":"block";
+  document.querySelectorAll(".navbtn").forEach(b=>b.classList.toggle("active",b.dataset.target===id));
+  speak(target.innerText);
+}
+window.showSection=showSection;
+
+document.querySelectorAll(".navbtn").forEach(btn=>btn.addEventListener("click",()=>showSection(btn.dataset.target)));
+
+easyToggle.addEventListener("change",()=>{easyMode=easyToggle.checked;localStorage.setItem("naveloaEasy",easyMode);updateLanguage()});
+darkToggle.addEventListener("change",()=>{darkMode=darkToggle.checked;localStorage.setItem("naveloaDark",darkMode);applyModes()});
+speechToggle.addEventListener("change",()=>{speechMode=speechToggle.checked;localStorage.setItem("naveloaSpeech",speechMode);if(speechMode)speak(easyMode?"Vorlesen ist an.":"Die Vorlesefunktion ist aktiviert.")});
+
+document.querySelectorAll(".editToggle").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    const box=btn.nextElementSibling;
+    box.classList.toggle("open");
+    btn.textContent=box.classList.contains("open")
+      ? (easyMode?"Bearbeitung schliessen":"Bearbeitung schliessen")
+      : (easyMode?"Bewerbung bearbeiten":"Bewerbung gemeinsam bearbeiten");
+    if(box.classList.contains("open"))speak(box.innerText);
+  });
+});
+
+document.getElementById("saveDraft").addEventListener("click",()=>{
+  const data={
+    text:document.getElementById("applicationText").value,
+    note:document.getElementById("supportNote").value
+  };
+  localStorage.setItem("naveloaSupportedApplicationDraft",JSON.stringify(data));
+  const status=document.getElementById("editStatus");
+  status.style.display="block";
+  status.textContent=easyMode?"Entwurf gespeichert.":"Der gemeinsame Entwurf wurde lokal gespeichert.";
+  speak(status.textContent);
+});
+
+document.getElementById("markReady").addEventListener("click",()=>{
+  const status=document.getElementById("editStatus");
+  status.style.display="block";
+  status.textContent=easyMode
+    ?"Die Bewerbung ist als fertig markiert. Alex kann sie jetzt auch ansehen und bestätigen."
+    :"Die Bewerbung wurde zur gemeinsamen Bestätigung markiert. Die bewerbende Person würde sie nun ebenfalls sehen und bestätigen.";
+  speak(status.textContent);
+});
+
+document.getElementById("connectAccept").addEventListener("click",()=>{
+  const status=document.getElementById("connectionStatus");
+  status.style.display="block";
+  status.textContent=easyMode
+    ?"Verbindung bestätigt."
+    :"Die Verknüpfung wurde bestätigt. Mia würde nun ebenfalls sehen, dass ihr verbunden seid.";
+  speak(status.textContent);
+});
+
+document.getElementById("connectLater").addEventListener("click",()=>{
+  const status=document.getElementById("connectionStatus");
+  status.style.display="block";
+  status.textContent=easyMode?"Die Anfrage bleibt offen.":"Die Anfrage bleibt offen und kann später beantwortet werden.";
+});
+
+applyModes();
+</script>
+</body>
+</html>
